@@ -1,0 +1,14 @@
+--liquibase formatted sql
+
+--changeset dzarembo:002
+CREATE TABLE orders (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    status VARCHAR(30) NOT NULL,
+    total_price BIGINT NOT NULL,
+    deleted BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+--rollback DROP TABLE IF EXISTS orders;

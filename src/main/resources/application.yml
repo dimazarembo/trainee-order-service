@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: trainee-order-service
+  profiles:
+    default: local
+  liquibase:
+    enabled: true
+  datasource:
+    driver-class-name: ${DB_DRIVER_CLASS_NAME:org.postgresql.Driver}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+
+user-service:
+  base-url: ${USER_SERVICE_BASE_URL:http://localhost:8080}
+  auth-user-id: ${USER_SERVICE_AUTH_USER_ID:0}
+  auth-role: ${USER_SERVICE_AUTH_ROLE:ADMIN}
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      userService:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 30s
+        permittedNumberOfCallsInHalfOpenState: 3
+        ignoreExceptions:
+          - by.dzarembo.traineeorderservice.exception.UserNotFoundException
