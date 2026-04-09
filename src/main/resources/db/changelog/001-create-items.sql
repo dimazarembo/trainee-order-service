@@ -1,0 +1,12 @@
+--liquibase formatted sql
+
+--changeset dzarembo:001
+CREATE TABLE items (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    price BIGINT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+--rollback DROP TABLE IF EXISTS items;
