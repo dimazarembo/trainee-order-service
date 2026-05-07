@@ -7,6 +7,8 @@ import by.dzarembo.traineeorderservice.dto.UserInfoResponse;
 import by.dzarembo.traineeorderservice.entity.ItemEntity;
 import by.dzarembo.traineeorderservice.entity.OrderEntity;
 import by.dzarembo.traineeorderservice.entity.OrderItemEntity;
+import by.dzarembo.traineeorderservice.event.PaymentEvent;
+import by.dzarembo.traineeorderservice.event.PaymentStatus;
 import by.dzarembo.traineeorderservice.exception.ItemNotFoundException;
 import by.dzarembo.traineeorderservice.exception.OrderNotFoundException;
 import by.dzarembo.traineeorderservice.mapper.OrderMapper;
@@ -106,6 +108,19 @@ public class OrderService {
         OrderEntity existingOrder = findActiveOrderById(orderId);
         existingOrder.setDeleted(true);
         orderRepository.save(existingOrder);
+    }
+
+    @Transactional
+    public void handlePaymentEvent(PaymentEvent event) {
+        OrderEntity order = findActiveOrderById(event.getOrderId());
+
+        if (event.getPaymentStatus() == PaymentStatus.SUCCESS) {
+            order.setStatus("PAID");
+        } else {
+            order.setStatus("PAYMENT_FAILED");
+        }
+
+        orderRepository.save(order);
     }
 
     private void prepareNewOrder(OrderEntity order) {
